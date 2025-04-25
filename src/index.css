@@ -1,8 +1,38 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(-45deg, #a8edea, #dff9fb, #a1c4fd, #c2e9fb);
+    background-size: 400% 400%;
+    animation: waveGradient 15s ease infinite;
+    color: white;
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+
+@keyframes waveGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+  
 
 .ingredientes{
     display: flex;
     gap: 10px;
+    padding: 2rem 0px;
 }
 
 .ingredientes img{
@@ -12,4 +42,54 @@
 .ingredientes_descripcion{
     max-height: 175px;
     flex: 1;
+}
+
+.recetas__header {
+    background-color: black;
+    background-image: url('https://images.unsplash.com/photo-1601315576609-0e5d6609a614?auto=format&fit=crop&w=1400&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    width: 100dvw;
+    height: 50vh;
+    position: relative; /* necesario para que el contenido absoluto se posicione respecto a este contenedor */
+    z-index: -1;
+    margin: 0px 0px 1rem 0px;
+    object-fit: cover;
+}
+
+.recetas__contenido {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.recetas__contenido h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: white !important;
+}
+.recetas__contenido p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: white !important;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* semitransparente negro */
+    z-index: 0;
+}
+
+
+.recetas__container{
+    position: relative;
 }
