@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.ingredientes{
+    display: flex;
+    gap: 10px;
+}
+
+.ingredientes img{
+    height: 175px !important;
+}
+
+.ingredientes_descripcion{
+    max-height: 175px;
+    flex: 1;
+}
