@@ -15,7 +15,7 @@ const Modal = ({ isOpen, onClose, children }) => {
     <div className="fixed inset-0 flex items-center justify-center" 
     style={{backgroundColor:"#00000080", zIndex:"3"}}>
       <div className="bg-white p-6 rounded-lg relative shadow-lg animate-fadeIn container"
-        style={{maxWidth:"750px", minHeight:"75dvh", padding:"2rem"}}
+        style={{maxWidth:"1200px", minHeight:"75dvh", padding:"2rem"}}
       >
         <button
           onClick={onClose}

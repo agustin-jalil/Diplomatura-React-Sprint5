@@ -8,28 +8,16 @@ const ITEMS_PER_PAGE = 6;
 const RecipeList = () => {
   const { recipes } = useRecipes();
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Categorías únicas
-  const categories = useMemo(() => {
-    const allCategories = recipes.map((r) => r.strCategory);
-    return ["Todas", ...new Set(allCategories)];
-  }, [recipes]);
-
-  // Filtrar por nombre y categoría
+  // Filtrar por nombre
   const filteredRecipes = useMemo(() => {
     return recipes.filter((recipe) => {
-      const matchesSearch = recipe.strMeal
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "Todas" || recipe.strCategory === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return recipe.nombre?.toLowerCase().includes(search.toLowerCase());
     });
-  }, [recipes, search, selectedCategory]);
+  }, [recipes, search]);
 
-  // Paginar resultados filtrados
+  // Paginado
   const totalPages = Math.ceil(filteredRecipes.length / ITEMS_PER_PAGE);
   const paginatedRecipes = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -43,16 +31,10 @@ const RecipeList = () => {
   };
 
   return (
-    <div className="container mx-auto">
-      {/* <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl">Recetas</h1>
-        <Link to="/recipes/create" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Nueva receta
-        </Link>
-      </div> */}
+    <div className="container mx-auto my-2">
 
       <div className="flex flex-col md:flex-row gap-4 mb-6 items-center justify-between">
-        {/* Input con icono */}
+        {/* Input de búsqueda */}
         <div className="relative w-full md:w-1/2">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
             🔍
@@ -66,7 +48,12 @@ const RecipeList = () => {
           />
         </div>
 
-        {/* Botón para limpiar (opcional) */}
+        {/* Botón nueva receta */}
+        <Link to="/recipes/create" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Nueva receta
+        </Link>
+
+        {/* Botón limpiar búsqueda */}
         {search && (
           <button
             onClick={() => setSearch("")}
@@ -93,8 +80,11 @@ const RecipeList = () => {
 
       {/* Lista de recetas */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
-        {paginatedRecipes.map((r) => (
-          <RecipeCard key={r.idMeal} recipe={r} />
+        {paginatedRecipes.map((recipe) => (
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+          />
         ))}
       </div>
 
@@ -105,11 +95,10 @@ const RecipeList = () => {
             key={i}
             onClick={() => setCurrentPage(i + 1)}
             className={`px-4 py-1 rounded-md border border-gray-300 text-sm cursor-pointer transition-colors duration-200
-        ${
-          currentPage === i + 1
-            ? "bg-blue-100 text-blue-700 border-blue-300"
-            : "bg-white text-gray-700 hover:bg-gray-100"
-        }`}
+        ${currentPage === i + 1
+                ? "bg-blue-100 text-blue-700 border-blue-300"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
           >
             {i + 1}
           </button>

@@ -6,7 +6,8 @@ const RecipeContext = createContext();
 
 export const useRecipes = () => useContext(RecipeContext);
 
-const API_URL = 'https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood';
+// NUEVO API_URL de MockAPI
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const RecipeProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([]);
@@ -14,7 +15,7 @@ export const RecipeProvider = ({ children }) => {
   const fetchRecipes = async () => {
     try {
       const res = await axios.get(API_URL);
-      setRecipes(res.data.meals || []);
+      setRecipes(res.data || []);
     } catch (error) {
       toast.error("Error al cargar recetas");
     }
@@ -22,10 +23,15 @@ export const RecipeProvider = ({ children }) => {
 
   const createRecipe = async (recipe) => {
     try {
-      const res = await axios.post(API_URL, recipe);
-      setRecipes([...recipes, res.data]);
+      const newRecipe = {
+        nombre: recipe.title,
+        descripcion: recipe.description,
+        imagen: recipe.image || "https://via.placeholder.com/150",
+      };
+      const res = await axios.post(API_URL, newRecipe);
+      setRecipes(prev => [...prev, res.data]);
       toast.success("Receta creada");
-    } catch (err) {
+    } catch (error) {
       toast.error("Error al crear receta");
     }
   };
@@ -33,20 +39,35 @@ export const RecipeProvider = ({ children }) => {
   const deleteRecipe = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
-      setRecipes(recipes.filter(r => r.id !== id));
+      setRecipes(prev => prev.filter(r => r.id !== id));
       toast.success("Receta eliminada");
-    } catch (err) {
+    } catch (error) {
       toast.error("Error al eliminar receta");
     }
   };
 
   const updateRecipe = async (id, updatedRecipe) => {
     try {
-      const res = await axios.put(`${API_URL}/${id}`, updatedRecipe);
-      setRecipes(recipes.map(r => r.id === id ? res.data : r));
+      const res = await axios.put(`${API_URL}/${id}`, {
+        nombre: updatedRecipe.nombre,       // <-- nombre correcto
+        descripcion: updatedRecipe.descripcion, // <-- descripcion correcto
+        imagen: updatedRecipe.imagen,       // <-- imagen correcto
+      });
+      setRecipes(prev => prev.map(r => r.id === id ? res.data : r));
       toast.success("Receta actualizada");
-    } catch (err) {
+    } catch (error) {
       toast.error("Error al actualizar receta");
+    }
+  };
+  
+
+  const getRecipeById = async (id) => {
+    try {
+      const res = await axios.get(`${API_URL}/${id}`);
+      return res.data;
+    } catch (error) {
+      toast.error("Error al cargar receta");
+      throw error;
     }
   };
 
@@ -55,7 +76,8 @@ export const RecipeProvider = ({ children }) => {
   }, []);
 
   return (
-    <RecipeContext.Provider value={{ recipes, fetchRecipes, createRecipe, deleteRecipe, updateRecipe }}>
+<RecipeContext.Provider value={{ recipes, fetchRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipeById }}>
+
       {children}
     </RecipeContext.Provider>
   );
